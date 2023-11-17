@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUMyum</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .page {
+            display: none;
+        }
+
+        .page-active {
+            display: block;
+        }
+
+        .navbar-brand {
+            width: 100%;
+            text-align: center;
+        }
+
+        .star-rating {
+            font-size: 1.5em;
+            color: orange;
+        }
+
+        .dish-img {
+            width: 50px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page 1: Mensa Selection -->
+    <div id="page1" class="page container page-active">
+        <h1 class="navbar-brand">TUMyum</h1>
+        <div class="list-group">
+            <button class="list-group-item list-group-item-action" onclick="showPage(2)">Mensa Arcisstr</button>
+            <button class="list-group-item list-group-item-action" onclick="showPage(2)">Mensa Garching</button>
+            <button class="list-group-item list-group-item-action" onclick="showPage(2)">StuCafé Garching</button>
+            <button class="list-group-item list-group-item-action" onclick="showPage(2)">Mensa Weihenstephan</button>
+        </div>
+    </div>
+
+    <!-- Page 2: Dish Selection -->
+    <div id="page2" class="page container">
+        <h1 class="navbar-brand">Mensa Garching</h1>
+        <div class="list-group">
+            <button class="list-group-item list-group-item-action" onclick="showPage(3)">
+                <img src="path-to-dish-image.jpg" alt="Dish" class="dish-img">
+                Schweinelachssteak mit Pfefferrahmsoße und Kartoffelpüree
+                <span class="badge badge-primary badge-pill">0,90 € / 1,00 € / 1,10 €</span>
+            </button>
+            <!-- More dishes -->
+        </div>
+    </div>
+
+    <!-- Page 3: Review Submission -->
+    <div id="page3" class="page container">
+        <h1 class="navbar-brand">Schweinelachssteak mit Pfefferrahmsoße und Kartoffelpüree</h1>
+        <div>
+            <p>Wie fandest du dein Essen?</p>
+            <span class="star-rating">★★★★★</span>
+            <button class="btn btn-primary" onclick="submitReview()">absenden</button>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageNumber) {
+            var pages = document.getElementsByClassName('page');
+            for (var i = 0; i < pages.length; i++) {
+                pages[i].classList.remove('page-active');
+            }
+            var page = document.getElementById('page' + pageNumber);
+            page.classList.add('page-active');
+        }
+
+        function submitReview() {
+            // Implementation for submitting review
+            alert('Review submitted!');
+            showPage(1); // Return to the first page
+        }
+    </script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>
