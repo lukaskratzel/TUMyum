@@ -141,7 +141,7 @@
             fetch(`api/getRating/?name=${name}`)
                 .then(result => {
                     result.json()
-                })☆
+                })
                 .then(data => {
                     const rating = data.rating
                     const parent = document.getElementById(parentID)
