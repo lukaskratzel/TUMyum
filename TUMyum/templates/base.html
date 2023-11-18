@@ -137,12 +137,12 @@
             let date = new Date()
             let week = getWeekNumber(date)
             const dateFormatted = `${date.getFullYear()}-${date.getMonth().toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-
             fetch(`https://tum-dev.github.io/eat-api/${activeCanteen}/${date.getFullYear()}/${week}.json`)
                 .then(response => response.json())
                 .then(jsonresponse => jsonresponse['days'].filter(entry => entry["date"] === "2023-11-14")) //TEST DATE
                 .then(today => {
                     const mealList = document.getElementById("meals")
+                    mealList.innerHTML = ""
 
                     today[0]['dishes'].forEach(async(meal) => {
                         const entry = document.createElement('button')
