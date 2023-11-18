@@ -82,10 +82,6 @@
     <script>
         var currentpage = 1
         var activeCanteen
-        const mealIcons = {
-            VEGAN: "🫑",
-            VEGETARISCH: "🥕"
-        }
 
         fetch('https://tum-dev.github.io/eat-api/enums/canteens.json')
             .then(result => result.json())
@@ -129,7 +125,7 @@
             fetch(`api/getRating/?name=${name}`)
                 .then(result => {
                     result.json()
-                })☆
+                })
                 .then(data => {
                     const rating = data.rating
                     const parent = document.getElementById(parentID)
@@ -156,15 +152,18 @@
                     mainCourses.forEach(async (meal, index) => {
                         const entry = document.createElement('button')
                         entry.className = 'list-group-item list-group-item-action border'
-                        let price = meal.prices.students.price_per_unit + "/100g"
+                        let price = meal.prices.students.price_per_unit + "€/100g"
                         if(meal.prices.students.base_price) {
                             price += ` +${meal.prices.students.base_price}€`
                         }
+                        const icon = meal.labels.includes("VEGAN") ? "🫑" : 
+                            meal.labels.includes("VEGETARIAN") ? "🥕" :
+                            meal.labels.includes("MEAT") ? "🍖" : "🍽️"
 
                         entry.innerHTML = `
                             <div class="row align-items-center">
-                                <div class="col-auto pr-0 h1">${icon}</div>
-                                <div class=col-auto h5 py-2">
+                                <div class="col-2 pr-0 h1">${icon}</div>
+                                <div class="col-10 h5 py-2 text-wrap">
                                     <h5>${meal.name}</h5>
                                     <div class="text-secondary">${price}</div>
                                 </div>
