@@ -2,9 +2,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FAF9F6">
     <title>TUMyum</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -61,6 +63,12 @@
             <div class="overflow-auto flex-grow-1 rounded border mb-3">
                 <div class="list-group-flush" id="meals">
                     <!-- Canteens will be added here once fetched -->
+                    <div class="list-group-item list-group-item-action border">
+                        <div class="row align-items-start">
+                            <div class="col">icon</div>
+                            <div class="col">text</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -68,7 +76,8 @@
 
     <!-- Page 3: Review Submission -->
     <div id="page3" class="page container">
-            <h1 class="navbar-brand container-fluid text-wrap">Schweinelachssteak mit Pfefferrahmsoße und Kartoffelpüree</h1>
+        <h1 class="navbar-brand container-fluid text-wrap">Schweinelachssteak mit Pfefferrahmsoße und Kartoffelpüree
+        </h1>
         <div>
             <p>Wie fandest du dein Essen?</p>
             <span class="star-rating">★★★★★</span>
@@ -142,9 +151,9 @@
                 .then(jsonresponse => jsonresponse['days'].filter(entry => entry["date"] === "2023-11-14")) //TEST DATE
                 .then(today => {
                     const mealList = document.getElementById("meals")
-                    mealList.innerHTML = ""
-
-                    today[0]['dishes'].forEach(async(meal) => {
+                    // mealList.innerHTML = ""
+                    const mainCourses = today[0]['dishes'].filter(dish => dish["dish_type"] != "Beilagen")
+                    mainCourses.forEach(async (meal) => {
                         const entry = document.createElement('button')
                         const rating = await getRating(meal['name'])
                         entry.className = 'list-group-item list-group-item-action text-wrap'
