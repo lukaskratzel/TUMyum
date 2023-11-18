@@ -11,20 +11,20 @@
             margin-left: auto;
             margin-right: auto;
         }
-        .low-opacity {
-            opacity: 50%;
+        .stars > div {
+            cursor: pointer;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
      <h1 class="text-center my-3" id="dishName">Dish name</h1>
-     <div class="stars d-flex justify-content-around my-3">
-        <div class="p-2 low-opacity h1" id="star1">⭐️</div>
-        <div class="p-2 low-opacity h1" id="star2">⭐️</div>
-        <div class="p-2 low-opacity h1" id="star3">⭐️</div>
-        <div class="p-2 low-opacity h1" id="star4">⭐️</div>
-        <div class="p-2 low-opacity h1" id="star5">⭐️</div>
+     <div class="stars d-flex justify-content-around my-3 my-1 text-warning">
+        <div class="p-3 h1" id="star1">☆</div>
+        <div class="p-3 h1" id="star2">☆</div>
+        <div class="p-3 h1" id="star3">☆</div>
+        <div class="p-3 h1" id="star4">☆</div>
+        <div class="p-3 h1" id="star5">☆</div>
      </div>
      <div class="text-center" id="resultDiv">
         <button class="btn btn-primary px-4" id="submitButton">Send</button>
@@ -39,9 +39,9 @@
                 currentRating = i
                 for (let j = 1; j <= 5; j++) {
                     if (j > i) {
-                        $('#star' + j).addClass('low-opacity')
+                        $('#star' + j).text('☆')
                     } else {
-                        $('#star' + j).removeClass('low-opacity')
+                        $('#star' + j).text('★')
                     }
                 }
             })
