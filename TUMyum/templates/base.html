@@ -177,7 +177,7 @@
             document.getElementById("current-date").innerText += `${date.getDate().toString().padStart(2, '0')}.${date.getMonth().toString().padStart(2, '0')}.${date.getFullYear()}`
             fetch(`https://tum-dev.github.io/eat-api/${activeCanteen}/${date.getFullYear()}/${week}.json`)
                 .then(response => response.json())
-                .then(jsonresponse => jsonresponse['days'].filter(entry => entry["date"] === "2023-11-14")) //TEST DATE
+                .then(jsonresponse => jsonresponse['days'].filter(entry => entry["date"] === dateFormatted))
                 .then(today => {
                     const mealList = document.getElementById("meals")
                     mealList.innerHTML = ""
