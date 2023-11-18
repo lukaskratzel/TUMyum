@@ -37,14 +37,20 @@
             font-family: 'Russo One', sans-serif;
             font-size: 60px;
         }
-
+        .fullHeight {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+        html {
+            height: -webkit-fill-available;
+        }
     </style>
 </head>
 
 <body>
     <!-- Page 1: Mensa Selection -->
     <div id="page1" class="page container page-active">
-        <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
+        <div class="h-100 d-flex flex-column" style="max-height: 100vh; max-height: -webkit-fill-available;">
             <h1 class="text-center pt-4 pb-2" id="logo"><span class="text-primary">TUM</span><span
                     class="text-warning">yum</span></h1>
             <h3 class="p-2 text-center">📍 Wähle einen Standort</h2>
@@ -58,7 +64,7 @@
 
     <!-- Page 2: Dish Selection -->
     <div id="page2" class="page container">
-        <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
+        <div class="h-100 d-flex flex-column" style="max-height: 100vh; max-height: -webkit-fill-available;">
             <div class="d-flex py-3">
                 <button class="btn btn-primary rounded-circle m-2 back-button" onclick="goBack()">←</button>
                 <span class="flex-grow-1 m-3 text-wrap text-center h5" id="canteen"></span>
@@ -72,8 +78,8 @@
     </div>
 
     <!-- Page 3: Review Submission -->
-    <div id="page3" class="page container h-100">
-        <div class="h-100 d-flex flex-column align-items-center justify-content-between" style="min-height: 100vh;">
+    <div id="page3" class="page container fullHeight">
+        <div class="h-100 d-flex flex-column align-items-center justify-content-between fullHeight">
             <div class="d-flex py-3">
                 <button class="btn btn-primary rounded-circle m-2 back-button" onclick="goBack()">←</button>
                 <span class="flex-grow-1 m-3 text-wrap text-center h5" id="dishName"></span>
