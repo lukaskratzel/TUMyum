@@ -18,6 +18,7 @@ def post_rating(request):
     name = request.data.get('name', None)
     rating = request.data.get('rating', None)
     ## -- input validation --
+
     if not name or type(name) != str:
         return Response({'error': 'please provide a valid name'}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -30,5 +31,5 @@ def post_rating(request):
     except:
         return Response({'error': 'please provide a valid rating'}, status=status.HTTP_400_BAD_REQUEST)
     ## -- end input validation --
-    Review.objects.create(name=name, rating=rating)
-    return Response({'message', 'Review created successfully'}, status=status.HTTP_200_OK)
+    Review.objects.create(name=name, stars=rating)
+    return Response({'message': 'Review created successfully'}, status=status.HTTP_200_OK)

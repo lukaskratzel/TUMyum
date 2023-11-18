@@ -208,7 +208,7 @@
             e.preventDefault();
             $('#submit').text("Sending ...")
             const data = {
-                name: dishName,
+                name: activeDish,
                 rating: currentRating
             }
             fetch('/api/postRating/', {
