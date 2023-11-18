@@ -21,12 +21,15 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+*wh*19yid(^o@i*7c@%kh^@ers_5d=162k-&3*j=%-8p@r4wf'
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [ #TODO: comment localhost
+    'https://tumyum.up.railway.app',
+]
 
 
 # Application definition
@@ -84,8 +87,12 @@ WSGI_APPLICATION = 'TUMyum.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'HOST': 'viaduct.proxy.rlwy.net',
+        'PORT': '28770',
     }
 }
 

@@ -8,6 +8,7 @@ django = "*"
 djangorestframework = "*"
 whitenoise = "*"
 gunicorn = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
