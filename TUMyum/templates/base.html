@@ -29,6 +29,10 @@
             width: 50px;
             height: auto;
         }
+
+        body {
+            background-color: #FAF9F6;
+        }
     </style>
 </head>
 
@@ -36,31 +40,38 @@
 
     <!-- Page 1: Mensa Selection -->
     <div id="page1" class="page container page-active">
-        <h1 class="navbar-brand">TUMyum</h1>
-        <div class="list-group">
-            <button class="list-group-item list-group-item-action" onclick="showPage(2)">Mensa Arcisstr</button>
-            <button class="list-group-item list-group-item-action" onclick="showPage(2)">Mensa Garching</button>
-            <button class="list-group-item list-group-item-action" onclick="showPage(2)">StuCafé Garching</button>
-            <button class="list-group-item list-group-item-action" onclick="showPage(2)">Mensa Weihenstephan</button>
+        <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
+            <img src="logo-preliminary.png" alt="test logo">
+            <h3 class="p-2 text-center">📍 Wähle einen Standort</h2>
+            <div class="overflow-auto flex-grow-1 rounded border mb-3">
+                <div class="list-group-flush" id="canteens">
+                    <!-- Canteens will be added here once fetched -->
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Page 2: Dish Selection -->
+
     <div id="page2" class="page container">
-        <h1 class="navbar-brand">Mensa Garching</h1>
-        <div class="list-group">
-            <button class="list-group-item list-group-item-action" onclick="showPage(3)">
-                <img src="path-to-dish-image.jpg" alt="Dish" class="dish-img">
-                Schweinelachssteak mit Pfefferrahmsoße und Kartoffelpüree
-                <span class="badge badge-primary badge-pill">0,90 € / 1,00 € / 1,10 €</span>
-            </button>
-            <!-- More dishes -->
+        <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
+            <div class="container-fluid d-flex p-5">
+                <div class="btn btn-outline-success">Go Back</div>
+                <div class="text-center text-wrap h" id="canteen"></div>
+            </div>
+            <div class="overflow-auto flex-grow-1 rounded border mb-3">
+                <div class="list-group-flush" id="meals">
+                    <!-- Canteens will be added here once fetched -->
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Page 3: Review Submission -->
     <div id="page3" class="page container">
-        <h1 class="navbar-brand">Schweinelachssteak mit Pfefferrahmsoße und Kartoffelpüree</h1>
+        
+            <h1 class="navbar-brand container-fluid text-wrap">Schweinelachssteak mit Pfefferrahmsoße und Kartoffelpüree</h1>
+        
         <div>
             <p>Wie fandest du dein Essen?</p>
             <span class="star-rating">★★★★★</span>
@@ -69,12 +80,34 @@
     </div>
 
     <script>
-        function showPage(pageNumber) {
-            var pages = document.getElementsByClassName('page');
-            for (var i = 0; i < pages.length; i++) {
+        var currentpage = 1
+        var activeCanteen
+
+        fetch('https://tum-dev.github.io/eat-api/enums/canteens.json')
+            .then(result => result.json())
+            .then(canteens => {
+                const canteenList = document.getElementById('canteens')
+
+                canteens.forEach(canteen => {
+                    const entry = document.createElement('button')
+                    entry.className = 'list-group-item list-group-item-action text-wrap'
+                    entry.innerText = canteen['name']
+                    canteenList.appendChild(entry)
+                    entry.onclick = function() {
+                        activeCanteen = entry.innerText
+                        document.getElementById('canteen').innerText = activeCanteen
+                        showPage();
+                    };
+                });
+            })
+
+        function showPage() {
+            let pages = document.getElementsByClassName('page');
+            for (let i = 0; i < pages.length; i++) {
                 pages[i].classList.remove('page-active');
             }
-            var page = document.getElementById('page' + pageNumber);
+            currentpage++
+            let page = document.getElementById('page' + currentpage);
             page.classList.add('page-active');
         }
 
