@@ -75,7 +75,7 @@
                 <button class="btn btn-primary rounded-circle m-2 back-button" onclick="goBack()">←</button>
                 <div class="flex-grow-1 m-2 text-wrap text-center">
                     <p class="flex-grow-1 h5 mb-1" id="canteen"></p>
-                    <p class="text-secondary text-center m-0" id="current-date">Heute,&nbsp;</p>
+                    <p class="text-secondary text-center m-0" id="current-date"></p>
                 </div>
             </div>
             <div class="overflow-auto flex-grow-1 rounded border mb-3">
@@ -174,7 +174,7 @@
             let date = new Date()
             let week = getWeekNumber(date)
             const dateFormatted = `${date.getFullYear()}-${date.getMonth().toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-            document.getElementById("current-date").innerText += `${date.getDate().toString().padStart(2, '0')}.${date.getMonth().toString().padStart(2, '0')}.${date.getFullYear()}`
+            document.getElementById("current-date").innerText = `Heute, ${date.getDate().toString().padStart(2, '0')}.${date.getMonth().toString().padStart(2, '0')}.${date.getFullYear()}`
             fetch(`https://tum-dev.github.io/eat-api/${activeCanteen}/${date.getFullYear()}/${week}.json`)
                 .then(response => response.json())
                 .then(jsonresponse => jsonresponse['days'].filter(entry => entry["date"] === dateFormatted))
