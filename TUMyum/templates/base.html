@@ -13,26 +13,9 @@
         .page {
             display: none;
         }
-
         .page-active {
             display: block;
         }
-
-        .navbar-brand {
-            width: 100%;
-            text-align: center;
-        }
-
-        .star-rating {
-            font-size: 1.5em;
-            color: orange;
-        }
-
-        .dish-img {
-            width: 50px;
-            height: auto;
-        }
-
         body {
             background-color: #FAF9F6;
         }
@@ -82,6 +65,7 @@
     <script>
         var currentpage = 1
         var activeCanteen
+        var activeDish
 
         fetch('https://tum-dev.github.io/eat-api/enums/canteens.json')
             .then(result => result.json())
@@ -172,7 +156,10 @@
                             </div>`
                         getRating(meal.name, `rating${index}`)
                         entry.className = 'list-group-item list-group-item-action text-wrap'
-                        
+                        entry.onclick = function() {
+                            activeDish = meal.name
+                            nextPage()
+                        }
                         mealList.appendChild(entry)
                     })
                 })
