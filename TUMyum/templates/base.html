@@ -41,7 +41,7 @@
     <!-- Page 1: Mensa Selection -->
     <div id="page1" class="page container page-active">
         <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
-            <img src="{% static 'TUMyum/logo.png' %}" alt="Logo">
+            <img src="" alt="Logo">
             <h3 class="p-2 text-center">📍 Wähle einen Standort</h2>
                 <div class="overflow-auto flex-grow-1 rounded border mb-3">
                     <div class="list-group-flush" id="canteens">
@@ -118,6 +118,21 @@
             }
         }
 
+        async function getRating(name) {
+            let result;
+            await fetch(`api/getRating/?name=${name}`)
+            .then(result => {
+                result.json()
+            })
+            .then(data => {
+                result = data.rating
+            })
+            .catch(error => {
+                result = 0
+            })
+            return result;
+        }
+
         function getDishes() {
             let date = new Date()
             let week = getWeekNumber(date)
@@ -129,8 +144,9 @@
                 .then(today => {
                     const mealList = document.getElementById("meals")
 
-                    today[0]['dishes'].forEach(meal => {
+                    today[0]['dishes'].forEach(async(meal) => {
                         const entry = document.createElement('button')
+                        const rating = await getRating(meal['name'])
                         entry.className = 'list-group-item list-group-item-action text-wrap'
                         entry.innerText = meal['name']
                         mealList.appendChild(entry)
