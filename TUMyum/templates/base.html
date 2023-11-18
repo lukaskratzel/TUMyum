@@ -32,7 +32,14 @@
             width: 50px;
             height: auto;
         }
-
+        .stars {
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .stars > div {
+            cursor: pointer;
+        }
         body {
             background-color: #FAF9F6;
         }
@@ -70,12 +77,16 @@
 
     <!-- Page 3: Review Submission -->
     <div id="page3" class="page container">
-        <h1 class="navbar-brand container-fluid text-wrap">Schweinelachssteak mit Pfefferrahmsoße und Kartoffelpüree
-        </h1>
-        <div>
-            <p>Wie fandest du dein Essen?</p>
-            <span class="star-rating">★★★★★</span>
-            <button class="btn btn-primary" onclick="">absenden</button>
+        <h1 class="text-center my-3" id="dishName"></h1>
+        <div class="stars d-flex justify-content-around my-3 my-1 text-warning">
+           <div class="p-3 h1" id="star1">☆</div>
+           <div class="p-3 h1" id="star2">☆</div>
+           <div class="p-3 h1" id="star3">☆</div>
+           <div class="p-3 h1" id="star4">☆</div>
+           <div class="p-3 h1" id="star5">☆</div>
+        </div>
+        <div class="text-center" id="resultDiv">
+           <button class="btn btn-primary px-4" id="submitButton">Send</button>
         </div>
     </div>
 
@@ -187,8 +198,51 @@
             return weekNumber;
         }
     </script>
+    <script>
+        //script for review submission logic
+        let currentRating = 0;
+        let dishName = "Test"
+        for (let i = 1; i <= 5; i++) {
+            let $star = $('#star' + i)
+            $star.click((e) => {
+                e.preventDefault();
+                currentRating = i
+                for (let j = 1; j <= 5; j++) {
+                    if (j > i) {
+                        $('#star' + j).text('☆')
+                    } else {
+                        $('#star' + j).text('★')
+                    }
+                }
+            })
+        }
+        $('#submitButton').click((e) => {
+            e.preventDefault();
+            $('#submit').text("Sending ...")
+            const data = {
+                name: dishName,
+                rating: currentRating
+            }
+            fetch('/api/postRating/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network error: ' + response.statusText);
+                }
+                return response.json()
+            })
+            .then(data => {
+                $('#resultDiv').text(data.message)
+            })
+            .catch(error => {
+                $('#resultDiv').text("Fehler")
+            })
+        })
+    </script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
-
 </html>
