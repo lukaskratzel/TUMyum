@@ -1,0 +1,230 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FAF9F6">
+    <title>TUMyum</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .page {
+            display: none;
+        }
+
+        .page-active {
+            display: block;
+        }
+
+        body {
+            background-color: #FAF9F6;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Page 1: Mensa Selection -->
+    <div id="page1" class="page container page-active">
+        <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
+            <img src="" alt="Logo">
+            <h3 class="p-2 text-center">📍 Wähle einen Standort</h2>
+                <div class="overflow-auto flex-grow-1 rounded border mb-3">
+                    <div class="list-group-flush" id="canteens">
+                        <!-- Canteens will be added here once fetched -->
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Dish Selection -->
+    <div id="page2" class="page container">
+        <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
+            <div class="container-fluid d-flex py-3">
+                <button class="btn btn-primary rounded-circle px-3 m-1" onclick="goBack()">←</button>
+                <span class="flex-grow-1 m-3 text-wrap text-center h5" id="canteen"></span>
+            </div>
+            <div class="overflow-auto flex-grow-1 rounded border mb-3">
+                <div class="list-group-flush" id="meals">
+                    <!-- Canteens will be added here once fetched -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Review Submission -->
+    <div id="page3" class="page container">
+        <h1 class="text-center my-3" id="dishName">Dish name</h1>
+        <div class="stars d-flex justify-content-around my-3 my-1 text-warning">
+            <div class="p-3 h1" id="star1">☆</div>
+            <div class="p-3 h1" id="star2">☆</div>
+            <div class="p-3 h1" id="star3">☆</div>
+            <div class="p-3 h1" id="star4">☆</div>
+            <div class="p-3 h1" id="star5">☆</div>
+        </div>
+        <div class="text-center" id="resultDiv">
+            <button class="btn btn-primary px-4" id="submitButton">Send</button>
+        </div>
+    </div>
+
+    <script>
+        var currentpage = 1
+        var activeCanteen
+        var activeDish
+
+        fetch('https://tum-dev.github.io/eat-api/enums/canteens.json')
+            .then(result => result.json())
+            .then(canteens => {
+                const canteenList = document.getElementById('canteens')
+
+                canteens.forEach(canteen => {
+                    const entry = document.createElement('button')
+                    entry.className = 'list-group-item list-group-item-action text-wrap'
+                    entry.innerText = canteen['name']
+                    entry.id = canteen['canteen_id']
+                    canteenList.appendChild(entry)
+                    entry.onclick = function () {
+                        activeCanteen = entry.id
+                        document.getElementById('canteen').innerText = '📍 ' + entry.innerText
+                        nextPage();
+                    };
+                });
+            })
+
+        function goBack() {
+            currentpage -= 2
+            nextPage()
+        }
+
+        function nextPage() {
+            let pages = document.getElementsByClassName('page');
+            for (let i = 0; i < pages.length; i++) {
+                pages[i].classList.remove('page-active');
+            }
+            currentpage++
+            let page = document.getElementById('page' + currentpage);
+            page.classList.add('page-active');
+
+            if (currentpage == 2) {
+                getDishes()
+            }
+        }
+
+        async function getRating(name, parentID) {
+            fetch(`api/getRating/?name=${name}`)
+                .then(result => {
+                    result.json()
+                })
+                .then(data => {
+                    const rating = data.rating
+                    const parent = document.getElementById(parentID)
+                    for (let i = 1; i <= 5; i++) {
+                        i > rating ? parent.innerHTML += "<h2>☆</h2>" : parent.innerHTML += "<h2>★</h2>"
+                    }
+                })
+                .catch(error => {
+                    console.error()
+                })
+        }
+        function getDishes() {
+            let date = new Date()
+            let week = getWeekNumber(date)
+            const dateFormatted = `${date.getFullYear()}-${date.getMonth().toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+            fetch(`https://tum-dev.github.io/eat-api/${activeCanteen}/${date.getFullYear()}/${week}.json`)
+                .then(response => response.json())
+                .then(jsonresponse => jsonresponse['days'].filter(entry => entry["date"] === "2023-11-14")) //TEST DATE
+                .then(today => {
+                    const mealList = document.getElementById("meals")
+                    mealList.innerHTML = ""
+                    const mainCourses = today[0]['dishes'].filter(dish => dish["dish_type"] != "Beilagen")
+
+                    mainCourses.forEach(async (meal, index) => {
+                        const entry = document.createElement('button')
+                        entry.className = 'list-group-item list-group-item-action border'
+                        let price = meal.prices.students.price_per_unit + "€/100g"
+                        if (meal.prices.students.base_price) {
+                            price += ` +${meal.prices.students.base_price}€`
+                        }
+                        const icon = meal.labels.includes("VEGAN") ? "🫑" :
+                            meal.labels.includes("VEGETARIAN") ? "🥕" :
+                                meal.labels.includes("MEAT") ? "🍖" : "🍽️"
+
+                        entry.innerHTML = `
+                            <div class="row align-items-center">
+                                <div class="col-2 pr-0 h1">${icon}</div>
+                                <div class="col-10 h5 py-2 text-wrap">
+                                    <h5>${meal.name}</h5>
+                                    <div class="text-secondary">${price}</div>
+                                </div>
+                                <div class="d-flex justify-content-start text-warning vw-100 mx-3" id="rating${index}">
+                                </div>
+                            </div>`
+                        getRating(meal.name, `rating${index}`)
+                        entry.className = 'list-group-item list-group-item-action text-wrap'
+                        entry.onclick = function () {
+                            activeDish = meal.name
+                            nextPage()
+                        }
+                        mealList.appendChild(entry)
+                    })
+                })
+        }
+
+        function getWeekNumber(date) {
+            date = new Date(date);
+            date.setHours(0, 0, 0, 0);
+            date.setDate(date.getDate() + 4 - (date.getDay() || 7));
+            const yearStart = new Date(date.getFullYear(), 0, 1);
+            const weekNumber = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+            return weekNumber;
+        }
+    </script>
+    <script>
+        let currentRating = 0;
+        let dishName = "Test"
+        for (let i = 1; i <= 5; i++) {
+            let $star = $('#star' + i)
+            $star.click((e) => {
+                e.preventDefault();
+                currentRating = i
+                for (let j = 1; j <= 5; j++) {
+                    if (j > i) {
+                        $('#star' + j).text('☆')
+                    } else {
+                        $('#star' + j).text('★')
+                    }
+                }
+            })
+        }
+        $('#submitButton').click((e) => {
+            e.preventDefault();
+            $('#submit').text("Sending ...")
+            const data = {
+                name: dishName,
+                rating: currentRating
+            }
+            fetch('/api/postRating/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network error: ' + response.statusText);
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    $('#resultDiv').text(data.message)
+                })
+                .catch(error => {
+                    $('#resultDiv').text("Fehler")
+                })
+        })
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>
