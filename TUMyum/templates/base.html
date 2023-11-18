@@ -28,6 +28,12 @@
         body {
             background-color: #FAF9F6;
         }
+
+        .back-button {
+            width: 40px !important;
+            height: 40px !important;
+        }
+        
     </style>
 </head>
 
@@ -48,8 +54,8 @@
     <!-- Page 2: Dish Selection -->
     <div id="page2" class="page container">
         <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
-            <div class="container-fluid d-flex py-3">
-                <button class="btn btn-primary rounded-circle px-3 m-1" onclick="goBack()">←</button>
+            <div class="d-flex py-3">
+                <button class="btn btn-primary rounded-circle m-2 back-button" onclick="goBack()">←</button>
                 <span class="flex-grow-1 m-3 text-wrap text-center h5" id="canteen"></span>
             </div>
             <div class="overflow-auto flex-grow-1 rounded border mb-3">
@@ -62,7 +68,10 @@
 
     <!-- Page 3: Review Submission -->
     <div id="page3" class="page container">
-        <h1 class="text-center my-3" id="dishName">Dish name</h1>
+        <div class="d-flex py-3">
+            <button class="btn btn-primary rounded-circle m-2 back-button" onclick="goBack()">←</button>
+            <span class="flex-grow-1 m-3 text-wrap text-center h5" id="dishName"></span>
+        </div>
         <div class="stars d-flex justify-content-around my-3 my-1 text-warning">
             <div class="p-3 h1" id="star1">☆</div>
             <div class="p-3 h1" id="star2">☆</div>
@@ -115,6 +124,9 @@
 
             if (currentpage == 2) {
                 getDishes()
+            }
+            else if(currentpage == 3) {
+                document.getElementById("dishName").innerText = activeDish
             }
         }
 
