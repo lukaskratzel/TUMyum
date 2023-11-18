@@ -13,6 +13,8 @@ class Review(models.Model):
     name = models.CharField(max_length=200)
     stars = models.IntegerField(validators=review_validators)
     timestamp = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.name
 
 def get_average_stars_for(name):
     return Review.objects.filter(name=name).aggregate(average_rating=Avg('stars'))

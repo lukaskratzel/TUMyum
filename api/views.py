@@ -10,7 +10,7 @@ def get_rating(request):
     if not name or type(name) != str:
         return Response({'error': 'please provide a valid name'}, status=status.HTTP_400_BAD_REQUEST)
     ## -- end input validation --
-    avg_rating = get_average_stars_for(name)
+    avg_rating = get_average_stars_for(name)['average_rating']
     return Response({'rating': avg_rating}, status=status.HTTP_200_OK)
     
 @api_view(['POST'])
@@ -18,7 +18,6 @@ def post_rating(request):
     name = request.data.get('name', None)
     rating = request.data.get('rating', None)
     ## -- input validation --
-
     if not name or type(name) != str:
         return Response({'error': 'please provide a valid name'}, status=status.HTTP_400_BAD_REQUEST)
     
