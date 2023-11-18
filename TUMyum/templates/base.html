@@ -15,24 +15,30 @@
         .page {
             display: none;
         }
+
         .page-active {
             display: block;
         }
+
         .stars {
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
         }
+
         .stars>div {
             cursor: pointer;
         }
+
         body {
             background-color: #FAF9F6;
         }
+
         .back-button {
             width: 40px !important;
             height: 40px !important;
         }
+
         #logo {
             font-family: 'Russo One', sans-serif;
             font-size: 60px;
@@ -67,10 +73,14 @@
         <div class="h-100 d-flex flex-column" style="max-height: 100vh; max-height: -webkit-fill-available;">
             <div class="d-flex py-3">
                 <button class="btn btn-primary rounded-circle m-2 back-button" onclick="goBack()">←</button>
-                <span class="flex-grow-1 m-3 text-wrap text-center h5" id="canteen"></span>
+                <div class="flex-grow-1 m-2 text-wrap text-center">
+                    <p class="flex-grow-1 h5 mb-1" id="canteen"></p>
+                    <p class="text-secondary text-center m-0" id="current-date">Heute,&nbsp;</p>
+                </div>
             </div>
             <div class="overflow-auto flex-grow-1 rounded border mb-3">
                 <div class="list-group-flush" id="meals">
+    
                     <!-- Canteens will be added here once fetched -->
                 </div>
             </div>
@@ -82,7 +92,7 @@
         <div class="h-100 d-flex flex-column align-items-center justify-content-between fullHeight">
             <div class="d-flex py-3">
                 <button class="btn btn-primary rounded-circle m-2 back-button" onclick="goBack()">←</button>
-                <span class="flex-grow-1 m-3 text-wrap text-center h5" id="dishName"></span>
+                <span class="flex-grow-1 m-2 ml-3 text-wrap text-center h5" id="dishName"></span>
             </div>
             <div class="stars d-flex justify-content-around text-warning">
                 <div class="p-3 h1" id="star1">☆</div>
@@ -92,7 +102,7 @@
                 <div class="p-3 h1" id="star5">☆</div>
             </div>
             <div class="text-center mb-4" id="resultDiv">
-                <button class="btn btn-lg btn-primary px-5 py-2" id="submitButton">Send</button>
+                <button class="btn btn-lg btn-primary px-5 py-2" id="submitButton">Absenden</button>
             </div>
         </div>
     </div>
@@ -164,12 +174,21 @@
             let date = new Date()
             let week = getWeekNumber(date)
             const dateFormatted = `${date.getFullYear()}-${date.getMonth().toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+            document.getElementById("current-date").innerText += `${date.getDate().toString().padStart(2, '0')}.${date.getMonth().toString().padStart(2, '0')}.${date.getFullYear()}`
             fetch(`https://tum-dev.github.io/eat-api/${activeCanteen}/${date.getFullYear()}/${week}.json`)
                 .then(response => response.json())
                 .then(jsonresponse => jsonresponse['days'].filter(entry => entry["date"] === "2023-11-14")) //TEST DATE
                 .then(today => {
                     const mealList = document.getElementById("meals")
                     mealList.innerHTML = ""
+                    console.log(today.length)
+                    if (today.length == 0) {
+                        mealList.innerHTML = `
+                            <div class="text-center list-group-item">
+                                Keine Gerichte verfügbar
+                            </div>`
+                        return;
+                    }
                     const mainCourses = today[0]['dishes'].filter(dish => dish["dish_type"] != "Beilagen")
 
                     mainCourses.forEach(async (meal, index) => {
