@@ -42,21 +42,20 @@
         <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
             <img src="logo-preliminary.png" alt="test logo">
             <h3 class="p-2 text-center">📍 Wähle einen Standort</h2>
-            <div class="overflow-auto flex-grow-1 rounded border mb-3">
-                <div class="list-group-flush" id="canteens">
-                    <!-- Canteens will be added here once fetched -->
+                <div class="overflow-auto flex-grow-1 rounded border mb-3">
+                    <div class="list-group-flush" id="canteens">
+                        <!-- Canteens will be added here once fetched -->
+                    </div>
                 </div>
-            </div>
         </div>
     </div>
 
     <!-- Page 2: Dish Selection -->
-
     <div id="page2" class="page container">
         <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
-            <div class="container-fluid d-flex p-5">
-                <div class="btn btn-outline-success">Go Back</div>
-                <div class="text-center text-wrap h" id="canteen"></div>
+            <div class="container-fluid d-flex py-3">
+                <button class="btn btn-primary rounded-circle px-3 m-1" onclick="goBack()">←</button>
+                <span class="flex-grow-1 m-3 text-wrap text-center h5" id="canteen"></span>
             </div>
             <div class="overflow-auto flex-grow-1 rounded border mb-3">
                 <div class="list-group-flush" id="meals">
@@ -72,7 +71,7 @@
         <div>
             <p>Wie fandest du dein Essen?</p>
             <span class="star-rating">★★★★★</span>
-            <button class="btn btn-primary" onclick="submitReview()">absenden</button>
+            <button class="btn btn-primary" onclick="">absenden</button>
         </div>
     </div>
 
@@ -89,16 +88,22 @@
                     const entry = document.createElement('button')
                     entry.className = 'list-group-item list-group-item-action text-wrap'
                     entry.innerText = canteen['name']
+                    entry.id = canteen['canteen_id']
                     canteenList.appendChild(entry)
-                    entry.onclick = function() {
-                        activeCanteen = entry.innerText
-                        document.getElementById('canteen').innerText = activeCanteen
-                        showPage();
+                    entry.onclick = function () {
+                        activeCanteen = entry.id
+                        document.getElementById('canteen').innerText = '📍 ' + entry.innerText
+                        nextPage();
                     };
                 });
             })
 
-        function showPage() {
+        function goBack() {
+            currentpage -= 2
+            nextPage()
+        }
+
+        function nextPage() {
             let pages = document.getElementsByClassName('page');
             for (let i = 0; i < pages.length; i++) {
                 pages[i].classList.remove('page-active');
@@ -106,15 +111,42 @@
             currentpage++
             let page = document.getElementById('page' + currentpage);
             page.classList.add('page-active');
+
+            if (currentpage == 2) {
+                getDishes()
+            }
         }
 
-        function submitReview() {
-            // Implementation for submitting review
-            alert('Review submitted!');
-            showPage(1); // Return to the first page
+        function getDishes() {
+            let date = new Date()
+            let week = getWeekNumber(date)
+            const dateFormatted = `${date.getFullYear()}-${date.getMonth().toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+
+            fetch(`https://tum-dev.github.io/eat-api/${activeCanteen}/${date.getFullYear()}/${week}.json`)
+                .then(response => response.json())
+                .then(jsonresponse => jsonresponse['days'].filter(entry => entry["date"] === dateFormatted))
+                .then(today => {
+                    const mealList = document.getElementById("meals")
+
+                    today[0]['dishes'].forEach(meal => {
+                        const entry = document.createElement('button')
+                        entry.className = 'list-group-item list-group-item-action text-wrap'
+                        entry.innerText = meal['name']
+                        mealList.appendChild(entry)
+                    })
+                })
+        }
+
+        function getWeekNumber(date) {
+            date = new Date(date);
+            date.setHours(0, 0, 0, 0);
+            date.setDate(date.getDate() + 4 - (date.getDay() || 7));
+            const yearStart = new Date(date.getFullYear(), 0, 1);
+            const weekNumber = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+            return weekNumber;
         }
     </script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 
