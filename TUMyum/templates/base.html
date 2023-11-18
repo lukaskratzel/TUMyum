@@ -137,21 +137,22 @@
             }
         }
 
-        async function getRating(name) {
-            let result;
-            await fetch(`api/getRating/?name=${name}`)
+        async function getRating(name, parentID) {
+            fetch(`api/getRating/?name=${name}`)
                 .then(result => {
                     result.json()
-                })
+                })☆
                 .then(data => {
-                    result = data.rating
+                    const rating = data.rating
+                    const parent = document.getElementById(parentID)
+                    for (let i = 1; i <= 5; i++) {
+                        i > rating ? parent.innerHTML += "<h2>☆</h2>" : parent.innerHTML += "<h2>★</h2>"
+                    }
                 })
                 .catch(error => {
-                    result = 0
+                    console.error()
                 })
-            return result;
         }
-
         function getDishes() {
             let date = new Date()
             let week = getWeekNumber(date)
@@ -182,8 +183,7 @@
                                 <div class="d-flex justify-content-start text-warning vw-100 mx-3" id="rating${index}">
                                 </div>
                             </div>`
-
-                        const rating = getRating(meal.name, `rating${index}`)
+                        getRating(meal.name, `rating${index}`)
                         entry.className = 'list-group-item list-group-item-action text-wrap'
                         
                         mealList.appendChild(entry)
