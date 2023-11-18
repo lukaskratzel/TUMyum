@@ -3,10 +3,6 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .models import get_average_stars_for, Review
 
-
-
-# Create your views here.
-
 @api_view(['GET'])
 def get_rating(request):
     name = request.query_params.get('name', None)
