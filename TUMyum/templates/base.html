@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,11 +38,10 @@
 </head>
 
 <body>
-    
     <!-- Page 1: Mensa Selection -->
     <div id="page1" class="page container page-active">
         <div class="h-100 d-flex flex-column" style="max-height: 100vh;">
-            <img src="logo-preliminary.png" alt="test logo">
+            <img src="{% static 'TUMyum/logo.png' %}" alt="Logo">
             <h3 class="p-2 text-center">📍 Wähle einen Standort</h2>
             <div class="overflow-auto flex-grow-1 rounded border mb-3">
                 <div class="list-group-flush" id="canteens">

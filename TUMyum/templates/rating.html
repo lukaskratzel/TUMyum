@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .stars {
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .low-opacity {
+            opacity: 50%;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+     <h1 class="text-center my-3" id="dishName">Dish name</h1>
+     <div class="stars d-flex justify-content-around my-3">
+        <div class="p-2 low-opacity h1" id="star1">⭐️</div>
+        <div class="p-2 low-opacity h1" id="star2">⭐️</div>
+        <div class="p-2 low-opacity h1" id="star3">⭐️</div>
+        <div class="p-2 low-opacity h1" id="star4">⭐️</div>
+        <div class="p-2 low-opacity h1" id="star5">⭐️</div>
+     </div>
+     <div class="text-center" id="resultDiv">
+        <button class="btn btn-primary px-4" id="submitButton">Send</button>
+     </div>
+     <script>
+        let currentRating = 0;
+        let dishName = "Test"
+        for (let i = 1; i <= 5; i++) {
+            let $star = $('#star' + i)
+            $star.click((e) => {
+                e.preventDefault();
+                currentRating = i
+                for (let j = 1; j <= 5; j++) {
+                    if (j > i) {
+                        $('#star' + j).addClass('low-opacity')
+                    } else {
+                        $('#star' + j).removeClass('low-opacity')
+                    }
+                }
+            })
+        }
+        $('#submitButton').click((e) => {
+            e.preventDefault();
+            $('#submit').text("Sending ...")
+            const data = {
+                name: dishName,
+                rating: currentRating
+            }
+            fetch('/api/postRating/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network error: ' + response.statusText);
+                }
+                return response.json()
+            })
+            .then(data => {
+                $('#resultDiv').text(data.message)
+            })
+            .catch(error => {
+                $('#resultDiv').text("Fehler")
+            })
+        })
+     </script>
+</body>
+</html>
