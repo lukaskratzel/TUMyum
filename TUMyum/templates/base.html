@@ -173,15 +173,14 @@
         function getDishes() {
             let date = new Date()
             let week = getWeekNumber(date)
-            const dateFormatted = `${date.getFullYear()}-${date.getMonth().toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-            document.getElementById("current-date").innerText = `Heute, ${date.getDate().toString().padStart(2, '0')}.${date.getMonth().toString().padStart(2, '0')}.${date.getFullYear()}`
+            const dateFormatted = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+            document.getElementById("current-date").innerText = `Heute, ${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`
             fetch(`https://tum-dev.github.io/eat-api/${activeCanteen}/${date.getFullYear()}/${week}.json`)
                 .then(response => response.json())
                 .then(jsonresponse => jsonresponse['days'].filter(entry => entry["date"] === dateFormatted))
                 .then(today => {
                     const mealList = document.getElementById("meals")
                     mealList.innerHTML = ""
-                    console.log(today.length)
                     if (today.length == 0) {
                         mealList.innerHTML = `
                             <div class="text-center list-group-item">
